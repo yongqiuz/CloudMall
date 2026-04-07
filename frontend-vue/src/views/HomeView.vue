@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <section class="market-entry fade-up">
     <aside class="category-panel page-card">
       <p class="panel-title">{{ t.allCategories }}</p>
@@ -22,10 +22,14 @@
           class="hero-slide"
           :class="[item.theme, { active: idx === activeSlide }]"
         >
-          <img class="hero-slide-image" :src="item.image" :alt="item.title" />
-          <p class="hero-kicker">{{ t.activityKicker }}</p>
-          <h1 class="hero-title">{{ item.title }}</h1>
-          <p class="hero-desc">{{ item.desc }}</p>
+          <img class="hero-photo" :src="item.image" :alt="item.title" />
+          <div class="hero-photo-mask"></div>
+          <div class="hero-copy">
+            <p class="hero-kicker">{{ item.kicker }}</p>
+            <h1 class="hero-title">{{ item.title }}</h1>
+            <p class="hero-desc">{{ item.desc }}</p>
+            <router-link class="hero-cta" to="/products">{{ t.buyNow }}</router-link>
+          </div>
         </div>
 
         <div class="hero-indicators">
@@ -137,21 +141,24 @@ const heroSlides = ref([
     title: "\u6e05\u660e\u6362\u5b63\u4e13\u573a",
     desc: "\u6625\u65b0\u5b63\u8d85\u503c\u4f18\u60e0\uff0c\u670d\u9970\u5bb6\u5c45\u6bcf\u65e5\u4e0a\u65b0\u3002",
     theme: "theme-1",
-    image: ""
+    kicker: "\u6625\u65e5\u4f1a\u573a",
+    image: "https://images.unsplash.com/photo-1483985988355-763728e1935b?auto=format&fit=crop&w=1400&q=80"
   },
   {
     id: 2,
     title: "3C\u6570\u7801\u72c2\u6b22\u8282",
     desc: "\u624b\u673a\u7535\u8111\u9650\u65f6\u76f4\u964d\uff0c\u4ee5\u65e7\u6362\u65b0\u66f4\u7701\u5fc3\u3002",
     theme: "theme-2",
-    image: ""
+    kicker: "\u6570\u7801\u65b0\u54c1",
+    image: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=1400&q=80"
   },
   {
     id: 3,
     title: "\u98df\u54c1\u751f\u9c9c\u65e5",
     desc: "\u6bcf\u65e5\u7206\u6b3e\u4f4e\u81f3 5 \u6298\uff0c\u4eca\u65e5\u8d2d\u4e70\u6b21\u65e5\u8fbe\u3002",
     theme: "theme-3",
-    image: ""
+    kicker: "\u751f\u9c9c\u4e13\u573a",
+    image: "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1400&q=80"
   }
 ]);
 
@@ -212,118 +219,6 @@ function setSlide(idx) {
   resetSlideTimer();
 }
 
-function seededRandom(seed) {
-  let t = seed >>> 0;
-  return () => {
-    t += 0x6d2b79f5;
-    let x = Math.imul(t ^ (t >>> 15), 1 | t);
-    x ^= x + Math.imul(x ^ (x >>> 7), 61 | x);
-    return ((x ^ (x >>> 14)) >>> 0) / 4294967296;
-  };
-}
-
-function roundRectPath(ctx, x, y, w, h, r) {
-  const radius = Math.max(0, Math.min(r, Math.min(w, h) / 2));
-  if (typeof ctx.roundRect === "function") {
-    ctx.roundRect(x, y, w, h, radius);
-    return;
-  }
-  ctx.moveTo(x + radius, y);
-  ctx.arcTo(x + w, y, x + w, y + h, radius);
-  ctx.arcTo(x + w, y + h, x, y + h, radius);
-  ctx.arcTo(x, y + h, x, y, radius);
-  ctx.arcTo(x, y, x + w, y, radius);
-}
-
-function createHeroImage(seed, width = 1000, height = 450) {
-  const rand = seededRandom(seed);
-  const canvas = document.createElement("canvas");
-  canvas.width = width;
-  canvas.height = height;
-  const ctx = canvas.getContext("2d");
-  if (!ctx) return "";
-
-  const greenA = `hsl(${150 + Math.floor(rand() * 18)} 55% 38%)`;
-  const greenB = `hsl(${165 + Math.floor(rand() * 18)} 60% 30%)`;
-  const orangeA = `hsl(${20 + Math.floor(rand() * 18)} 92% 52%)`;
-  const orangeB = `hsl(${28 + Math.floor(rand() * 16)} 92% 46%)`;
-
-  const bg = ctx.createLinearGradient(0, 0, width, height);
-  bg.addColorStop(0, greenA);
-  bg.addColorStop(0.55, greenB);
-  bg.addColorStop(1, orangeA);
-  ctx.fillStyle = bg;
-  ctx.fillRect(0, 0, width, height);
-
-  for (let i = 0; i < 10; i += 1) {
-    const r = Math.floor(60 + rand() * 160);
-    const x = Math.floor(rand() * width);
-    const y = Math.floor(rand() * height);
-    const g = ctx.createRadialGradient(x, y, 0, x, y, r);
-    g.addColorStop(0, "rgba(255,255,255,0.22)");
-    g.addColorStop(1, "rgba(255,255,255,0)");
-    ctx.fillStyle = g;
-    ctx.beginPath();
-    ctx.arc(x, y, r, 0, Math.PI * 2);
-    ctx.fill();
-  }
-
-  ctx.save();
-  ctx.globalAlpha = 0.18;
-  for (let i = 0; i < 8; i += 1) {
-    const w = 220 + Math.floor(rand() * 260);
-    const h = 90 + Math.floor(rand() * 140);
-    const x = Math.floor(rand() * (width - w));
-    const y = Math.floor(rand() * (height - h));
-    const radius = 26;
-    ctx.fillStyle = i % 2 === 0 ? "rgba(255,255,255,0.9)" : "rgba(15,23,42,0.85)";
-    ctx.beginPath();
-    ctx.moveTo(x + radius, y);
-    ctx.arcTo(x + w, y, x + w, y + h, radius);
-    ctx.arcTo(x + w, y + h, x, y + h, radius);
-    ctx.arcTo(x, y + h, x, y, radius);
-    ctx.arcTo(x, y, x + w, y, radius);
-    ctx.closePath();
-    ctx.fill();
-  }
-  ctx.restore();
-
-  ctx.fillStyle = orangeB;
-  ctx.beginPath();
-  roundRectPath(ctx, width * 0.08, height * 0.14, width * 0.34, height * 0.14, 36);
-  ctx.fill();
-
-  ctx.fillStyle = "rgba(255,255,255,0.96)";
-  ctx.font = "700 56px system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial";
-  ctx.textBaseline = "middle";
-  ctx.fillText("FLASH SALE", width * 0.11, height * 0.21);
-
-  ctx.fillStyle = "rgba(255,255,255,0.92)";
-  ctx.font = "600 34px system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial";
-  const badges = ["FREE SHIPPING", "COUPON", "NEW ARRIVALS", "TOP PICKS"];
-  const badge = badges[Math.floor(rand() * badges.length)];
-  ctx.fillText(badge, width * 0.11, height * 0.33);
-
-  ctx.fillStyle = "rgba(15,23,42,0.32)";
-  ctx.beginPath();
-  roundRectPath(ctx, width * 0.62, height * 0.18, width * 0.28, height * 0.56, 44);
-  ctx.fill();
-
-  ctx.strokeStyle = "rgba(255,255,255,0.86)";
-  ctx.lineWidth = 10;
-  ctx.beginPath();
-  roundRectPath(ctx, width * 0.67, height * 0.26, width * 0.18, height * 0.36, 38);
-  ctx.stroke();
-
-  ctx.fillStyle = "rgba(255,255,255,0.86)";
-  ctx.beginPath();
-  ctx.arc(width * 0.72, height * 0.64, 16, 0, Math.PI * 2);
-  ctx.arc(width * 0.82, height * 0.64, 16, 0, Math.PI * 2);
-  ctx.fill();
-
-  return canvas.toDataURL("image/png");
-}
-
 async function loadCategories() {
   const res = await api.getCategories({ page: 1, limit: 50 });
   categories.value = res.data?.list || [];
@@ -360,12 +255,6 @@ async function loadCommentCount() {
 
 onMounted(async () => {
   await Promise.all([loadCategories(), loadProducts(), loadNews(), loadCommentCount()]);
-
-  heroSlides.value = heroSlides.value.map((item, idx) => ({
-    ...item,
-    image: createHeroImage(Date.now() + item.id * 97 + idx * 193)
-  }));
-
   startSlideTimer();
 });
 

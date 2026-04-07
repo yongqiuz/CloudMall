@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap");
+﻿@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&display=swap");
 
 :root {
   --bg: #f4f7fb;
@@ -662,8 +662,7 @@ a {
   color: #fff;
   padding: 28px;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  align-items: flex-end;
   background: linear-gradient(135deg, rgba(15, 23, 42, 0.26), rgba(15, 118, 110, 0.1));
   opacity: 0;
   pointer-events: none;
@@ -671,39 +670,66 @@ a {
   transition: opacity 0.35s ease, transform 0.35s ease;
 }
 
-.hero-slide-image {
-  position: absolute;
-  inset: 0;
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: 0;
-}
-
-.hero-kicker,
-.hero-title,
-.hero-desc {
+.hero-copy,
+.hero-art {
   position: relative;
   z-index: 1;
 }
 
+.hero-copy {
+  max-width: 360px;
+  border-radius: 20px;
+  padding: 18px 20px;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.56), rgba(15, 118, 110, 0.34));
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(6px);
+}
+
+.hero-photo,
+.hero-photo-mask {
+  position: absolute;
+  inset: 0;
+}
+
+.hero-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero-photo-mask {
+  background:
+    linear-gradient(180deg, rgba(15, 23, 42, 0.04) 0%, rgba(15, 23, 42, 0.1) 45%, rgba(15, 23, 42, 0.58) 100%),
+    linear-gradient(90deg, rgba(6, 78, 59, 0.22) 0%, rgba(6, 78, 59, 0.04) 56%);
+}
+
+.hero-slide.theme-1 .hero-photo {
+  object-position: center 38%;
+}
+
+.hero-slide.theme-2 .hero-photo {
+  object-position: center center;
+}
+
+.hero-slide.theme-3 .hero-photo {
+  object-position: center 44%;
+}
 .hero-slide.theme-1 {
   background:
-    radial-gradient(circle at 20% 24%, rgba(255, 255, 255, 0.25), transparent 38%),
-    linear-gradient(128deg, #15803d 0%, #0f766e 52%, #ea580c 100%);
+    radial-gradient(circle at 78% 36%, rgba(255, 255, 255, 0.24), transparent 35%),
+    linear-gradient(128deg, #0f766e 0%, #15803d 54%, #ea580c 100%);
 }
 
 .hero-slide.theme-2 {
   background:
-    radial-gradient(circle at 82% 20%, rgba(255, 255, 255, 0.24), transparent 36%),
-    linear-gradient(130deg, #0f766e 0%, #14532d 48%, #c2410c 100%);
+    radial-gradient(circle at 76% 24%, rgba(255, 255, 255, 0.2), transparent 34%),
+    linear-gradient(130deg, #064e3b 0%, #0f766e 50%, #f97316 100%);
 }
 
 .hero-slide.theme-3 {
   background:
-    radial-gradient(circle at 75% 25%, rgba(255, 255, 255, 0.26), transparent 34%),
-    linear-gradient(128deg, #166534 0%, #15803d 46%, #f97316 100%);
+    radial-gradient(circle at 75% 25%, rgba(255, 255, 255, 0.22), transparent 34%),
+    linear-gradient(128deg, #14532d 0%, #15803d 48%, #fb923c 100%);
 }
 
 .hero-slide.active {
@@ -735,6 +761,128 @@ a {
 .hero-indicator.active {
   width: 24px;
   background: #fff;
+}
+
+.hero-carousel .hero-kicker {
+  font-size: 0.86rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.hero-carousel .hero-title {
+  font-size: clamp(1.35rem, 1.9vw, 2rem);
+  max-width: 100%;
+}
+
+.hero-carousel .hero-desc {
+  font-size: 0.95rem;
+  max-width: 100%;
+}
+
+.hero-cta {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 16px;
+  border-radius: 999px;
+  padding: 10px 18px;
+  color: #0f3f2f;
+  background: rgba(255, 255, 255, 0.92);
+  font-weight: 800;
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.16);
+}
+
+.hero-art {
+  min-height: 270px;
+}
+
+.hero-glow,
+.hero-orbit,
+.hero-product,
+.hero-bubble {
+  position: absolute;
+}
+
+.hero-glow {
+  inset: 12% 2% 10% 16%;
+  border-radius: 48px;
+  background: rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  backdrop-filter: blur(4px);
+}
+
+.hero-orbit {
+  right: 12%;
+  top: 9%;
+  width: 250px;
+  height: 250px;
+  border-radius: 50%;
+  border: 1px dashed rgba(255, 255, 255, 0.42);
+}
+
+.hero-product {
+  border-radius: 28px;
+  color: #0f172a;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.22);
+}
+
+.hero-product-main {
+  right: 12%;
+  top: 14%;
+  width: min(250px, 58%);
+  min-height: 188px;
+  padding: 26px;
+  display: grid;
+  gap: 8px;
+}
+
+.hero-product-side {
+  right: 44%;
+  bottom: 13%;
+  width: min(180px, 42%);
+  padding: 20px;
+  display: grid;
+  gap: 6px;
+}
+
+.hero-product-icon {
+  width: 58px;
+  height: 58px;
+  border-radius: 18px;
+  display: inline-grid;
+  place-items: center;
+  color: #fff;
+  background: linear-gradient(135deg, var(--brand), var(--accent));
+  font-weight: 900;
+}
+
+.hero-product strong {
+  font-size: 1.16rem;
+}
+
+.hero-product small,
+.hero-product span {
+  color: var(--subtle);
+  font-weight: 700;
+}
+
+.hero-bubble {
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.34);
+}
+
+.hero-bubble.one {
+  right: 4%;
+  bottom: 18%;
+  width: 68px;
+  height: 68px;
+}
+
+.hero-bubble.two {
+  right: 62%;
+  top: 18%;
+  width: 34px;
+  height: 34px;
 }
 
 .quick-panel {
@@ -819,6 +967,14 @@ a {
     flex-direction: column;
   }
 
+  .hero-slide {
+    padding: 24px;
+  }
+
+  .hero-copy {
+    max-width: 100%;
+  }
+
   .floor-grid {
     grid-template-columns: 1fr;
   }
@@ -895,6 +1051,3 @@ a {
   display: none;
 }
 
-.hero-indicators {
-  pointer-events: none;
-}

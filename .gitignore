@@ -1,0 +1,25 @@
+# OS / IDE
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# Node
+node_modules/
+frontend-vue/node_modules/
+frontend-vue/.npm-cache/
+dist/
+frontend-vue/dist/
+
+# Java / Maven
+target/
+**/target/
+.m2repo/
+*.log
+logs/
+
+# Env / cache
+.env
+.env.*
+*.tmp
+*.swp

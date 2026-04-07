@@ -1,0 +1,10 @@
+先启动注册中心（Eureka）
+cd C:\Users\90538\Desktop\webmarket\eureka-server
+mvn spring-boot:run
+再启动后端业务服务（现有后端）
+cd C:\Users\90538\Desktop\webmarket\springboot-schema
+mvn spring-boot:run
+最后启动前端（Vue）
+cd C:\Users\90538\Desktop\webmarket\frontend-vue
+npm install（只需要首次安装）
+npm run dev

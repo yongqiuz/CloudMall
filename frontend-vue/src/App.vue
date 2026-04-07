@@ -17,12 +17,14 @@
       </div>
     </footer>
   </div>
+  <GlobalNotice />
 </template>
 
 <script setup>
 import { computed } from "vue";
 import { useRoute } from "vue-router";
 import AppHeader from "./components/AppHeader.vue";
+import GlobalNotice from "./components/GlobalNotice.vue";
 
 const t = {
   brand: "\u0043\u006c\u006f\u0075\u0064\u004d\u0061\u006c\u006c - \u73b0\u4ee3\u5316\u0020\u0053\u0070\u0072\u0069\u006e\u0067\u0043\u006c\u006f\u0075\u0064\u0020\u5546\u57ce",

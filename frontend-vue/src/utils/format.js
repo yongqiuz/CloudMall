@@ -1,4 +1,4 @@
-import { fileBase } from "../api/http";
+﻿import { fileBase } from "../api/http";
 
 export function toImageUrl(rawPath) {
   if (!rawPath) return "";
@@ -8,7 +8,7 @@ export function toImageUrl(rawPath) {
 
 export function money(value) {
   const num = Number(value || 0);
-  return `¥${num.toFixed(2)}`;
+  return `\u00a5${num.toFixed(2)}`;
 }
 
 export function nowTime() {

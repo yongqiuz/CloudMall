@@ -34,6 +34,7 @@ import com.utils.R;
 import com.utils.MD5Util;
 import com.utils.MPUtil;
 import com.utils.CommonUtil;
+import com.utils.PasswordPolicyUtil;
 import java.io.IOException;
 
 
@@ -74,9 +75,13 @@ public class YonghuController {
      * 注册
      */
 	@IgnoreAuth
-    @RequestMapping("/register")
+	@RequestMapping("/register")
     public R register(@RequestBody YonghuEntity yonghu){
     	//ValidatorUtils.validateEntity(yonghu);
+        String passwordError = PasswordPolicyUtil.validatePassword(yonghu.getMima());
+        if(passwordError != null) {
+            return R.error(passwordError);
+        }
     	YonghuEntity user = yonghuService.selectOne(new EntityWrapper<YonghuEntity>().eq("zhanghao", yonghu.getZhanghao()));
 		if(user!=null) {
 			return R.error("注册用户已存在");
@@ -198,6 +203,10 @@ public class YonghuController {
     public R save(@RequestBody YonghuEntity yonghu, HttpServletRequest request){
     	yonghu.setId(new Date().getTime()+new Double(Math.floor(Math.random()*1000)).longValue());
     	//ValidatorUtils.validateEntity(yonghu);
+        String passwordError = PasswordPolicyUtil.validatePassword(yonghu.getMima());
+        if(passwordError != null) {
+            return R.error(passwordError);
+        }
     	YonghuEntity user = yonghuService.selectOne(new EntityWrapper<YonghuEntity>().eq("zhanghao", yonghu.getZhanghao()));
 		if(user!=null) {
 			return R.error("用户已存在");
@@ -214,6 +223,10 @@ public class YonghuController {
     public R add(@RequestBody YonghuEntity yonghu, HttpServletRequest request){
     	yonghu.setId(new Date().getTime()+new Double(Math.floor(Math.random()*1000)).longValue());
     	//ValidatorUtils.validateEntity(yonghu);
+        String passwordError = PasswordPolicyUtil.validatePassword(yonghu.getMima());
+        if(passwordError != null) {
+            return R.error(passwordError);
+        }
     	YonghuEntity user = yonghuService.selectOne(new EntityWrapper<YonghuEntity>().eq("zhanghao", yonghu.getZhanghao()));
 		if(user!=null) {
 			return R.error("用户已存在");
@@ -229,8 +242,45 @@ public class YonghuController {
     @RequestMapping("/update")
     public R update(@RequestBody YonghuEntity yonghu, HttpServletRequest request){
         //ValidatorUtils.validateEntity(yonghu);
+        if(StringUtils.isNotBlank(yonghu.getMima())) {
+            String passwordError = PasswordPolicyUtil.validatePassword(yonghu.getMima());
+            if(passwordError != null) {
+                return R.error(passwordError);
+            }
+        }
         yonghuService.updateById(yonghu);//全部更新
         return R.ok();
+    }
+    
+
+    /**
+     * Change password for current signed-in user.
+     */
+    @RequestMapping("/changePassword")
+    public R changePassword(@RequestBody Map<String, Object> params, HttpServletRequest request){
+        Long id = (Long)request.getSession().getAttribute("userId");
+        if(id == null) {
+            return R.error("\u8bf7\u5148\u767b\u5f55");
+        }
+        String oldPassword = params.get("oldPassword") == null ? "" : params.get("oldPassword").toString();
+        String newPassword = params.get("newPassword") == null ? "" : params.get("newPassword").toString();
+        if(StringUtils.isBlank(oldPassword) || StringUtils.isBlank(newPassword)) {
+            return R.error("\u539f\u5bc6\u7801\u548c\u65b0\u5bc6\u7801\u4e0d\u80fd\u4e3a\u7a7a");
+        }
+        String passwordError = PasswordPolicyUtil.validatePassword(newPassword);
+        if(passwordError != null) {
+            return R.error(passwordError);
+        }
+        YonghuEntity user = yonghuService.selectById(id);
+        if(user == null) {
+            return R.error("\u7528\u6237\u4e0d\u5b58\u5728");
+        }
+        if(!oldPassword.equals(user.getMima())) {
+            return R.error("\u539f\u5bc6\u7801\u4e0d\u6b63\u786e");
+        }
+        user.setMima(newPassword);
+        yonghuService.updateById(user);
+        return R.ok("\u5bc6\u7801\u4fee\u6539\u6210\u529f");
     }
     
 

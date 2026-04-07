@@ -3,22 +3,28 @@
     <h1 class="title">{{ t.title }}</h1>
     <p class="sub">{{ t.sub }}</p>
 
-    <div class="row mt-16">
-      <button class="ghost-btn" :class="{ active: identity === 'user' }" @click="identity = 'user'">{{ t.userLogin }}</button>
-      <button class="ghost-btn" :class="{ active: identity === 'admin' }" @click="identity = 'admin'">{{ t.adminLogin }}</button>
+    <div class="identity-switch">
+      <button class="ghost-btn" :class="{ active: identity === 'user' }" @click="identity = 'user'">
+        {{ t.userLogin }}
+      </button>
+      <button class="ghost-btn" :class="{ active: identity === 'admin' }" @click="identity = 'admin'">
+        {{ t.adminLogin }}
+      </button>
     </div>
 
     <label class="field mt-16">
       <span>{{ t.user }}</span>
       <input v-model.trim="form.username" class="input" :placeholder="t.userPh" />
     </label>
-    <label class="field mt-16">
-      <span>{{ t.pass }}</span>
-      <input v-model.trim="form.password" type="password" class="input" :placeholder="t.passPh" />
-    </label>
+
+    <PasswordInput
+      v-model="form.password"
+      :label="t.pass"
+      :placeholder="t.passPh"
+      autocomplete="current-password"
+    />
 
     <button class="button mt-24" @click="submit">{{ t.login }}</button>
-    <p v-if="error" class="hint error mt-16">{{ error }}</p>
   </section>
 </template>
 
@@ -27,6 +33,8 @@ import { reactive, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { api } from "../api/modules";
 import { useUserStore } from "../stores/user";
+import PasswordInput from "../components/PasswordInput.vue";
+import { showNotice } from "../utils/notice";
 
 const t = {
   title: "\u6b22\u8fce\u767b\u5f55 CloudMall",
@@ -45,14 +53,12 @@ const ADMIN_TOKEN_KEY = "mall_admin_token";
 const route = useRoute();
 const router = useRouter();
 const userStore = useUserStore();
-const error = ref("");
 const identity = ref(route.query.type === "admin" ? "admin" : "user");
 const form = reactive({ username: "", password: "" });
 
 async function submit() {
-  error.value = "";
   if (!form.username || !form.password) {
-    error.value = "\u8bf7\u8f93\u5165\u5b8c\u6574\u8d26\u53f7\u548c\u5bc6\u7801";
+    showNotice("\u8bf7\u8f93\u5165\u5b8c\u6574\u8d26\u53f7\u548c\u5bc6\u7801");
     return;
   }
 
@@ -75,7 +81,7 @@ async function submit() {
     userStore.setUser(sr.data);
     router.push(String(route.query.redirect || "/"));
   } catch (e) {
-    error.value = e.message || "\u767b\u5f55\u5931\u8d25";
+    showNotice(e.message || "\u767b\u5f55\u5931\u8d25");
   }
 }
 </script>

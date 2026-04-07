@@ -25,6 +25,9 @@ export const api = {
   updateProfile(payload) {
     return http.post("/yonghu/update", payload);
   },
+  changePassword(payload) {
+    return http.post("/yonghu/changePassword", payload);
+  },
   getCategories(params = { page: 1, limit: 50 }) {
     return http.get("/shangpinfenlei/list", { params });
   },

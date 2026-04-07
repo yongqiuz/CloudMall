@@ -1,4 +1,5 @@
 import axios from "axios";
+import { showNotice } from "../utils/notice";
 
 const API_BASE = import.meta.env.VITE_API_BASE || "/springcloudk02l8";
 
@@ -21,14 +22,16 @@ http.interceptors.response.use(
   (response) => {
     const data = response.data;
     if (typeof data?.code !== "undefined" && data.code !== 0) {
-      return Promise.reject(new Error(data.msg || "服务开小差了，请稍后重试"));
+      showNotice(data.msg || "\u670d\u52a1\u5668\u5f02\u5e38");
+      return Promise.reject(new Error(data.msg || "服务端异常"));
     }
     return data;
   },
   (error) => {
     const message =
       error?.response?.data?.msg ||
-      (error?.code === "ECONNABORTED" ? "请求超时，请检查网络后重试" : "网络异常，请稍后重试");
+      (error?.code === "ECONNABORTED" ? "\u8bf7\u6c42\u8d85\u65f6\uff0c\u8bf7\u68c0\u67e5\u7f51\u7edc\u540e\u91cd\u8bd5" : "\u7f51\u7edc\u5f02\u5e38\uff0c\u8bf7\u7a0d\u540e\u91cd\u8bd5");
+    showNotice(message);
     return Promise.reject(new Error(message));
   }
 );

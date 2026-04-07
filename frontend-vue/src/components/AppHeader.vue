@@ -15,6 +15,7 @@
       </nav>
 
       <div class="actions">
+        <router-link v-if="isAdmin" class="ghost-btn admin-back-btn" to="/admin">{{ t.admin }}</router-link>
         <template v-if="userStore.isLoggedIn">
           <router-link class="ghost-btn" to="/profile">{{ userStore.user?.xingming || t.profile }}</router-link>
           <button class="ghost-btn" @click="logout">{{ t.logout }}</button>
@@ -29,11 +30,13 @@
 </template>
 
 <script setup>
+import { computed } from "vue";
 import { useRouter } from "vue-router";
 import { useUserStore } from "../stores/user";
 
 const router = useRouter();
 const userStore = useUserStore();
+const isAdmin = computed(() => Boolean(localStorage.getItem("mall_admin_token")));
 
 const t = {
   home: "\u9996\u9875",
@@ -42,6 +45,7 @@ const t = {
   cart: "\u8d2d\u7269\u8f66",
   orders: "\u6211\u7684\u8ba2\u5355",
   profile: "\u4e2a\u4eba\u4e2d\u5fc3",
+  admin: "\u8fd0\u8425\u540e\u53f0",
   logout: "\u9000\u51fa",
   login: "\u767b\u5f55",
   register: "\u6ce8\u518c"

@@ -1,6 +1,6 @@
 <template>
   <div v-if="isAdminRoute" class="app-shell">
-    <main class="container page-main">
+    <main class="admin-page-main page-main">
       <router-view />
     </main>
   </div>

@@ -47,6 +47,12 @@ a {
   padding-bottom: 36px;
 }
 
+.admin-page-main {
+  width: 100%;
+  margin: 0;
+  padding: 24px 24px 36px 304px;
+}
+
 .header-wrap {
   position: sticky;
   top: 0;
@@ -167,6 +173,12 @@ a {
 .ghost-btn:disabled {
   cursor: not-allowed;
   opacity: 0.5;
+}
+
+.admin-back-btn {
+  border-color: rgba(234, 88, 12, 0.35);
+  color: #c2410c;
+  background: #fff7ed;
 }
 
 .input,
@@ -1102,10 +1114,9 @@ a {
 }
 
 .admin-shell {
-  display: grid;
-  grid-template-columns: 260px minmax(0, 1fr);
-  gap: 18px;
-  margin-top: 24px;
+  --admin-sidebar-width: 260px;
+  display: block;
+  margin-top: 0;
 }
 
 .admin-sidebar,
@@ -1118,11 +1129,14 @@ a {
 }
 
 .admin-sidebar {
-  position: sticky;
-  top: 92px;
-  align-self: start;
+  position: fixed;
+  left: -282px;
+  z-index: 20;
   display: grid;
   gap: 10px;
+  width: var(--admin-sidebar-width);
+  max-height: calc(100vh - 48px);
+  overflow: auto;
   border-radius: 24px;
   padding: 18px;
 }
@@ -1171,6 +1185,7 @@ a {
 
 .admin-workspace {
   min-width: 0;
+  margin-left: 0;
 }
 
 .admin-hero {
@@ -1393,12 +1408,25 @@ a {
 }
 
 @media (max-width: 980px) {
+  .admin-page-main {
+    padding: 18px;
+  }
+
   .admin-shell {
+    display: grid;
     grid-template-columns: 1fr;
+    gap: 18px;
   }
 
   .admin-sidebar {
     position: static;
+    width: auto;
+    max-height: none;
+    overflow: visible;
+  }
+
+  .admin-workspace {
+    margin-left: 0;
   }
 
   .admin-hero {
